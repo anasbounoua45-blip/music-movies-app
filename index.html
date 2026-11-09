@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamVerse - ANAS App</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="StreamVerse">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            /* Background جديد نقي وعصري */
+            background: linear-gradient(135deg, #070709 0%, #111119 50%, #1a1a26 100%);
+            color: #ffffff;
+            padding-bottom: 120px;
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(18, 18, 26, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(29, 185, 84, 0.2);
+            padding: 18px 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 21px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, #1db954, #1ed760);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .upload-section {
+            padding: 20px 15px 5px 15px;
+            text-align: center;
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, #1db954, #127335);
+            color: #fff;
+            padding: 12px 22px;
+            border-radius: 30px;
+            display: inline-block;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(29, 185, 84, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .upload-btn:active {
+            transform: scale(0.95);
+        }
+
+        .upload-btn input {
+            display: none;
+        }
+
+        .categories {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            overflow-x: auto;
+        }
+
+        .categories::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.3s;
+        }
+
+        .tab.active {
+            background: #1db954;
+            color: #fff;
+            border-color: #1db954;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(29, 185, 84, 0.4);
+        }
+
+        .container {
+            padding: 10px 15px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 20px 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ffffff;
+        }
+
+        .section-title i {
+            color: #1db954;
+        }
+
+        .cards-scroll {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .cards-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .card {
+            background: rgba(24, 24, 36, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            min-width: 140px;
+            max-width: 140px;
+            border-radius: 14px;
+            padding: 10px;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .card:active {
+            transform: scale(0.95);
+        }
+
+        .card-img-wrapper {
+            width: 100%;
+            height: 150px;
+            border-radius: 10px;
+            background: #1a1a24;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: #1db954;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .play-btn {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background: #1db954;
+            color: #fff;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 8px;
+        }
+
+        .card-sub {
+            font-size: 11px;
+            color: #8a8a9e;
+            margin-top: 3px;
+        }
+
+        /* Modal Streaming Video Player */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .modal video {
+            width: 100%;
+            max-width: 700px;
+            border-radius: 14px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.9);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            font-size: 32px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Bottom Player Bar */
+        .player-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(18, 18, 26, 0.95);
+            backdrop-filter: blur(15px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 65%;
+        }
+
+        .player-icon {
+            width: 44px;
+            height: 44px;
+            background: #1db954;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            font-size: 26px;
+        }
+
+        .player-controls i {
+            cursor: pointer;
+            color: #1db954;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>STREAMVERSE • ANAS</h1>
+    </header>
+
+    <div class="upload-section">
+        <label class="upload-btn">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Télégarger Musique (Offline)
+            <input type="file" id="fileInput" accept="audio/*" multiple onchange="handleLocalFiles(event)">
+        </label>
+    </div>
+
+    <div class="categories">
+        <div class="tab active" onclick="filterTab('all', this)">Tous</div>
+        <div class="tab" onclick="filterTab('music', this)">🎧 Musique (Offline)</div>
+        <div class="tab" onclick="filterTab('movies', this)">🎬 Films & Séries (Online)</div>
+    </div>
+
+    <div class="container">
+        <!-- Musique -->
+        <div class="section-title" id="musicTitle">
+            <i class="fa-solid fa-music"></i> Ma Musique Locale
+        </div>
+        <div class="cards-scroll" id="musicList"></div>
+
+        <!-- Tous les Films -->
+        <div class="section-title" id="moviesTitle">
+            <i class="fa-solid fa-film"></i> Tous les Films & Séries (Streaming)
+        </div>
+        <div class="cards-scroll" id="moviesList"></div>
+    </div>
+
+    <!-- Video Modal -->
+    <div class="modal" id="videoModal">
+        <i class="fa-solid fa-xmark close-modal" onclick="closeVideo()"></i>
+        <h3 id="videoTitle" style="margin-bottom:15px; color:#1db954; text-align:center;"></h3>
+        <video id="videoPlayer" controls preload="metadata">
+            <source id="videoSource" src="" type="video/mp4">
+        </video>
+    </div>
+
+    <audio id="audioPlayer" src=""></audio>
+
+    <div class="player-bar">
+        <div class="player-info">
+            <div class="player-icon" id="playerImg">
+                <i class="fa-solid fa-music"></i>
+            </div>
+            <div>
+                <div class="card-title" id="currentTrackTitle">Khtar Chanson</div>
+                <div class="card-sub" id="currentTrackArtist">StreamVerse Player</div>
+            </div>
+        </div>
+        <div class="player-controls">
+            <i class="fa-solid fa-circle-play" id="playBtn" onclick="togglePlay()"></i>
+        </div>
+    </div>
+
+    <script>
+        let tracks = [
+            { id: 1, title: "Our Love Is In Danger", artist: "Cheba Souad & Hichem Smati", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" }
+        ];
+
+        // Tous les films (قائمة كاملة للأفلام والمسلسلات للاستريمينغ)
+        const onlineMovies = [
+            { id: 1, title: "Big Buck Bunny", year: "2024", type: "Animation 4K", streamUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" },
+            { id: 2, title: "Sintel Sci-Fi", year: "2024", type: "Fantasy / Action", streamUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4" },
+            { id: 3, title: "Tears of Steel", year: "2023", type: "Post-Apocalyptic", streamUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" },
+            { id: 4, title: "Elephants Dream", year: "2022", type: "Sci-Fi Drama", streamUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" },
+            { id: 5, title: "For Bigger Blazes", year: "2023", type: "Action Trailer", streamUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" },
+            { id: 6, title: "Subaru Outback", year: "2024", type: "Adventure", streamUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackSeeTheWorld.mp4" }
+        ];
+
+        const audio = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        let isPlaying = false;
+
+        function renderMusic() {
+            const musicListEl = document.getElementById('musicList');
+            musicListEl.innerHTML = '';
+            tracks.forEach((track) => {
+                musicListEl.innerHTML += `
+                    <div class="card" onclick="playSong('${track.url}', '${track.title}', '${track.artist}')">
+                        <div class="card-img-wrapper">
+                            <i class="fa-solid fa-headphones"></i>
+                            <div class="play-btn"><i class="fa-solid fa-play"></i></div>
+                        </div>
+                        <div class="card-title">${track.title}</div>
+                        <div class="card-sub">${track.artist}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderMovies() {
+            const moviesListEl = document.getElementById('moviesList');
+            moviesListEl.innerHTML = '';
+            onlineMovies.forEach(movie => {
+                moviesListEl.innerHTML += `
+                    <div class="card" onclick="playOnlineStream('${movie.streamUrl}', '${movie.title}')">
+                        <div class="card-img-wrapper" style="color: #e50914;">
+                            <i class="fa-solid fa-clapperboard"></i>
+                            <div class="play-btn" style="background:#e50914;"><i class="fa-solid fa-play"></i></div>
+                        </div>
+                        <div class="card-title">${movie.title}</div>
+                        <div class="card-sub">${movie.year} • ${movie.type}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function handleLocalFiles(event) {
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const objectURL = URL.createObjectURL(file);
+                tracks.unshift({
+                    id: Date.now() + i,
+                    title: file.name.replace(/\.[^/.]+$/, ""),
+                    artist: "Local Storage (Offline)",
+                    url: objectURL
+                });
+            }
+            renderMusic();
+        }
+
+        function playSong(url, title, artist) {
+            audio.src = url;
+            audio.play();
+            isPlaying = true;
+            playBtn.className = "fa-solid fa-circle-pause";
+            document.getElementById('currentTrackTitle').innerText = title;
+            document.getElementById('currentTrackArtist').innerText = artist;
+
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: title,
+                    artist: artist,
+                    album: 'StreamVerse Player',
+                    artwork: [
+                        { src: 'https://cdn-icons-png.flaticon.com/512/3844/3844724.png', sizes: '512x512', type: 'image/png' }
+                    ]
+                });
+                navigator.mediaSession.setActionHandler('play', () => togglePlay());
+                navigator.mediaSession.setActionHandler('pause', () => togglePlay());
+            }
+        }
+
+        function togglePlay() {
+            if (!audio.src) return;
+            if (isPlaying) {
+                audio.pause();
+                playBtn.className = "fa-solid fa-circle-play";
+            } else {
+                audio.play();
+                playBtn.className = "fa-solid fa-circle-pause";
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function playOnlineStream(streamUrl, title) {
+            if(isPlaying) { audio.pause(); isPlaying = false; playBtn.className = "fa-solid fa-circle-play"; }
+            
+            if(!navigator.onLine) {
+                alert("Makaynsch l'internet! Les films kytfrjo ghir online (WiFi).");
+                return;
+            }
+
+            document.getElementById('videoTitle').innerText = title;
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoSource = document.getElementById('videoSource');
+            videoSource.src = streamUrl;
+            videoPlayer.load();
+            document.getElementById('videoModal').style.display = 'flex';
+            videoPlayer.play();
+        }
+
+        function closeVideo() {
+            const videoPlayer = document.getElementById('videoPlayer');
+            videoPlayer.pause();
+            document.getElementById('videoModal').style.display = 'none';
+        }
+
+        function filterTab(category, tabElem) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tabElem.classList.add('active');
+
+            const mList = document.getElementById('musicList');
+            const mTitle = document.getElementById('musicTitle');
+            const movList = document.getElementById('moviesList');
+            const movTitle = document.getElementById('moviesTitle');
+
+            if(category === 'music') {
+                mList.style.display = 'flex'; mTitle.style.display = 'flex';
+                movList.style.display = 'none'; movTitle.style.display = 'none';
+            } else if(category === 'movies') {
+                mList.style.display = 'none'; mTitle.style.display = 'none';
+                movList.style.display = 'flex'; movTitle.style.display = 'flex';
+            } else {
+                mList.style.display = 'flex'; mTitle.style.display = 'flex';
+                movList.style.display = 'flex'; movTitle.style.display = 'flex';
+            }
+        }
+
+        renderMusic();
+        renderMovies();
+    </script>
+</body>
+</html>
