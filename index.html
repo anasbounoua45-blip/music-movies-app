@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamVerse - ANAS Player</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f0f13;
+            color: #ffffff;
+            padding-bottom: 120px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1db954, #127335);
+            padding: 18px 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .upload-section {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .upload-btn {
+            background: #1db954;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 4px 10px rgba(29, 185, 84, 0.3);
+        }
+
+        .upload-btn input {
+            display: none;
+        }
+
+        .container {
+            padding: 10px 15px;
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: bold;
+            margin: 20px 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1db954;
+        }
+
+        .cards-scroll {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .cards-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .card {
+            background: #181824;
+            min-width: 140px;
+            max-width: 140px;
+            border-radius: 12px;
+            padding: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .card-img-wrapper {
+            width: 100%;
+            height: 140px;
+            border-radius: 8px;
+            background: #2a2a3d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #1db954;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .play-btn {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background: #1db954;
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 8px;
+        }
+
+        .card-sub {
+            font-size: 11px;
+            color: #aaaaaa;
+            margin-top: 2px;
+        }
+
+        .player-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #161622;
+            border-top: 1px solid #282838;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 65%;
+        }
+
+        .player-icon {
+            width: 42px;
+            height: 42px;
+            background: #1db954;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            font-size: 24px;
+        }
+
+        .player-controls i {
+            cursor: pointer;
+            color: #1db954;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><i class="fa-solid fa-play"></i> STREAMVERSE - ANAS</h1>
+    </header>
+
+    <div class="upload-section">
+        <label class="upload-btn">
+            <i class="fa-solid fa-folder-plus"></i> zyd musique mn l'téléphone (Offline)
+            <input type="file" id="fileInput" accept="audio/*" multiple onchange="handleLocalFiles(event)">
+        </label>
+    </div>
+
+    <div class="container">
+        <div class="section-title">
+            <i class="fa-solid fa-headphones"></i> Les chansons dyalk (Offline & Local)
+        </div>
+        <div class="cards-scroll" id="musicList"></div>
+    </div>
+
+    <audio id="audioPlayer" src=""></audio>
+
+    <div class="player-bar">
+        <div class="player-info">
+            <div class="player-icon" id="playerImg">
+                <i class="fa-solid fa-music"></i>
+            </div>
+            <div>
+                <div class="card-title" id="currentTrackTitle">Khtar chanson باش تشغلها</div>
+                <div class="card-sub" id="currentTrackArtist">StreamVerse Player</div>
+            </div>
+        </div>
+        <div class="player-controls">
+            <i class="fa-solid fa-circle-play" id="playBtn" onclick="togglePlay()"></i>
+        </div>
+    </div>
+
+    <script>
+        let tracks = [
+            { id: 1, title: "Our Love Is In Danger", artist: "Cheba Souad, Hichem Smati", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" }
+        ];
+
+        const audio = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        let isPlaying = false;
+
+        function renderMusic() {
+            const musicListEl = document.getElementById('musicList');
+            musicListEl.innerHTML = '';
+            tracks.forEach((track) => {
+                musicListEl.innerHTML += `
+                    <div class="card" onclick="playSong('${track.url}', '${track.title}', '${track.artist}')">
+                        <div class="card-img-wrapper">
+                            <i class="fa-solid fa-music"></i>
+                            <div class="play-btn"><i class="fa-solid fa-play"></i></div>
+                        </div>
+                        <div class="card-title">${track.title}</div>
+                        <div class="card-sub">${track.artist}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function handleLocalFiles(event) {
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const objectURL = URL.createObjectURL(file);
+                tracks.unshift({
+                    id: Date.now() + i,
+                    title: file.name.replace(/\.[^/.]+$/, ""),
+                    artist: "Fichier Local (Offline)",
+                    url: objectURL
+                });
+            }
+            renderMusic();
+        }
+
+        function playSong(url, title, artist) {
+            audio.src = url;
+            audio.play();
+            isPlaying = true;
+            playBtn.className = "fa-solid fa-circle-pause";
+            document.getElementById('currentTrackTitle').innerText = title;
+            document.getElementById('currentTrackArtist').innerText = artist;
+
+            // Activation dyal Lock Screen Player (Background Playback)
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: title,
+                    artist: artist,
+                    album: 'StreamVerse Offline',
+                    artwork: [
+                        { src: 'https://cdn-icons-png.flaticon.com/512/3844/3844724.png', sizes: '512x512', type: 'image/png' }
+                    ]
+                });
+
+                navigator.mediaSession.setActionHandler('play', () => togglePlay());
+                navigator.mediaSession.setActionHandler('pause', () => togglePlay());
+            }
+        }
+
+        function togglePlay() {
+            if (!audio.src) return;
+            if (isPlaying) {
+                audio.pause();
+                playBtn.className = "fa-solid fa-circle-play";
+            } else {
+                audio.play();
+                playBtn.className = "fa-solid fa-circle-pause";
+            }
+            isPlaying = !isPlaying;
+        }
+
+        renderMusic();
+    </script>
+</body>
+</html>
