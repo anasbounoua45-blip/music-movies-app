@@ -1,0 +1,416 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080b0a">
+<title>ANAS — Music & Cinema</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080b0a;--panel:#111715;--panel2:#17201c;--line:#26332d;
+  --text:#f4f8f5;--muted:#91a198;--green:#b8f36b;--green2:#7ecb43;
+  --radius:22px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"DM Sans",sans-serif;min-height:100vh}
+button,input{font:inherit}
+button{cursor:pointer}
+img{display:block;max-width:100%}
+.app{min-height:100vh;padding-bottom:115px}
+.sidebar{
+ position:fixed;inset:0 auto 0 0;width:245px;padding:28px 19px;
+ background:#0b100e;border-right:1px solid var(--line);z-index:20;
+ display:flex;flex-direction:column
+}
+.logo{display:flex;align-items:center;gap:11px;margin:3px 8px 42px}
+.logo-mark{width:39px;height:39px;border-radius:13px;background:var(--green);color:#0a100b;
+ display:grid;place-items:center;font:900 21px Outfit}
+.logo-name{font:800 22px Outfit;letter-spacing:1.5px}
+.logo-name span{color:var(--green)}
+.nav-label{font-size:10px;letter-spacing:2px;color:#68776e;font-weight:800;margin:0 12px 13px}
+.nav{display:grid;gap:7px}
+.nav button{
+ border:0;background:transparent;color:#9aa79f;text-align:left;padding:13px 14px;
+ border-radius:13px;display:flex;align-items:center;gap:13px;font-weight:700;transition:.2s
+}
+.nav button:hover,.nav button.active{background:#1b2820;color:var(--green)}
+.nav-icon{width:20px;text-align:center;font-size:17px}
+.side-bottom{margin-top:auto;background:linear-gradient(145deg,#1b2b20,#111a15);
+ border:1px solid #304331;border-radius:18px;padding:17px}
+.side-bottom strong{display:block;font:700 15px Outfit;margin-bottom:6px}
+.side-bottom p{font-size:12px;color:var(--muted);line-height:1.6;margin:0}
+.main{margin-left:245px;padding:25px 34px 40px;max-width:1600px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:28px}
+.mobile-brand{display:none;font:800 20px Outfit}
+.search{position:relative;max-width:460px;width:100%}
+.search input{width:100%;background:#111815;border:1px solid var(--line);border-radius:14px;
+ padding:13px 16px 13px 43px;color:white;outline:none}
+.search input:focus{border-color:#719d4e}
+.search span{position:absolute;left:15px;top:10px;color:#91a198;font-size:18px}
+.profile{display:flex;align-items:center;gap:10px;font-size:13px;color:#b8c5bd;font-weight:700}
+.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
+ background:var(--green);color:#10170d;font-weight:900;font-family:Outfit}
+.hero{
+ min-height:340px;border-radius:27px;overflow:hidden;position:relative;
+ display:flex;align-items:flex-end;padding:36px;
+ background:linear-gradient(90deg,rgba(5,10,8,.96),rgba(5,10,8,.55) 52%,rgba(5,10,8,.08)),
+ linear-gradient(0deg,rgba(5,10,8,.55),transparent),
+ url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1800&q=90") center/cover;
+ border:1px solid #29372f
+}
+.hero-content{max-width:600px;position:relative;z-index:1}
+.eyebrow{color:var(--green);font-size:11px;letter-spacing:3px;font-weight:900;text-transform:uppercase}
+.hero h1{font:800 clamp(37px,5vw,65px)/.98 Outfit;margin:14px 0}
+.hero h1 span{color:var(--green)}
+.hero p{color:#c0cbc4;line-height:1.7;max-width:480px;font-size:14px}
+.hero-actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:23px}
+.primary,.secondary{border:0;border-radius:12px;padding:13px 19px;font-weight:800}
+.primary{background:var(--green);color:#10170d}
+.primary:hover{background:#d0ff96}
+.secondary{background:#ffffff18;color:white;border:1px solid #ffffff30}
+.section{margin-top:38px}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:15px;margin-bottom:18px}
+.section-head h2{font:750 24px Outfit;margin:0}
+.section-head p{margin:6px 0 0;color:var(--muted);font-size:12px}
+.text-btn{background:none;border:0;color:var(--green);font-size:12px;font-weight:800}
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.quick-card{min-height:125px;border:1px solid var(--line);border-radius:18px;padding:19px;
+ display:flex;align-items:center;gap:15px;background:linear-gradient(130deg,#18231d,#101613)}
+.quick-icon{width:48px;height:48px;border-radius:15px;background:#b8f36b1b;color:var(--green);
+ display:grid;place-items:center;font-size:22px}
+.quick-card strong{font:700 17px Outfit}
+.quick-card small{display:block;color:var(--muted);margin-top:5px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.card{min-width:0;position:relative}
+.cover{position:relative;aspect-ratio:1/1;border-radius:17px;overflow:hidden;background:#17221c}
+.cover img{width:100%;height:100%;object-fit:cover;transition:transform .45s}
+.card:hover .cover img{transform:scale(1.06)}
+.cover:after{content:"";position:absolute;inset:45% 0 0;background:linear-gradient(transparent,#0009);pointer-events:none}
+.cover-actions{position:absolute;right:10px;top:10px;z-index:2;display:flex;gap:7px}
+.round{width:35px;height:35px;border-radius:50%;border:1px solid #ffffff35;
+ background:#080b0bbd;color:white;display:grid;place-items:center;font-size:15px}
+.round.liked{color:var(--green);border-color:var(--green)}
+.play-cover{position:absolute;z-index:2;right:12px;bottom:12px;width:43px;height:43px;
+ border-radius:50%;border:0;background:var(--green);color:#10170d;font-size:17px}
+.card h3{font:700 15px Outfit;margin:12px 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .sub{font-size:12px;color:var(--muted)}
+.tag{display:inline-block;color:var(--green);background:#b8f36b17;border:1px solid #b8f36b30;
+ border-radius:20px;padding:5px 9px;font-size:10px;font-weight:800;margin-top:8px}
+.movie-card .cover{aspect-ratio:4/5}
+.movie-card .cover img{object-position:center}
+.page-title{font:800 36px Outfit;margin:10px 0 8px}
+.page-desc{color:var(--muted);font-size:14px;margin:0 0 24px}
+.empty{border:1px dashed #34443a;border-radius:20px;padding:45px 20px;text-align:center;color:var(--muted)}
+.empty strong{display:block;color:white;font:700 19px Outfit;margin-bottom:7px}
+.library-tools{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+.upload-label{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:#10170d;
+ border-radius:12px;padding:12px 16px;font-weight:800;font-size:13px;cursor:pointer}
+.upload-label input{display:none}
+.player{
+ position:fixed;z-index:30;left:245px;right:0;bottom:0;min-height:88px;
+ background:#101613f2;backdrop-filter:blur(18px);border-top:1px solid var(--line);
+ display:grid;grid-template-columns:1fr 1.3fr 1fr;align-items:center;gap:20px;padding:13px 28px
+}
+.now{display:flex;align-items:center;gap:12px;min-width:0}
+.now img{width:52px;height:52px;border-radius:10px;object-fit:cover;background:#26332d}
+.now strong{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.now small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.controls{display:flex;align-items:center;justify-content:center;gap:17px}
+.controls button{border:0;background:none;color:#e9f1eb;font-size:18px}
+.controls .main-play{background:var(--green);color:#10170d;width:39px;height:39px;border-radius:50%;font-size:15px}
+.progress-wrap{display:flex;align-items:center;gap:9px;color:#91a198;font-size:10px;margin-top:8px}
+input[type=range]{accent-color:var(--green);min-width:0}
+#seek{width:100%}
+.player-right{display:flex;align-items:center;justify-content:flex-end;gap:10px;color:#9aa79f}
+.player-right input{width:85px}
+.modal-backdrop{position:fixed;inset:0;background:#000b;z-index:60;display:none;
+ align-items:center;justify-content:center;padding:18px}
+.modal-backdrop.show{display:flex}
+.modal{width:min(500px,100%);max-height:85vh;overflow:auto;background:#111a15;
+ border:1px solid #34443a;border-radius:22px;padding:23px}
+.modal h2{font:750 24px Outfit;margin:0 0 10px}
+.modal p{color:var(--muted);font-size:13px;line-height:1.6}
+.modal input{width:100%;background:#080d0a;border:1px solid var(--line);border-radius:11px;
+ color:white;padding:13px;margin:12px 0;outline:none}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+.video-box{width:100%;aspect-ratio:16/9;background:#000;border-radius:14px;overflow:hidden;margin-top:15px}
+.video-box video{width:100%;height:100%}
+.toast{position:fixed;z-index:90;bottom:115px;left:50%;transform:translateX(-50%);
+ background:#d2ff9c;color:#10170d;border-radius:30px;padding:11px 18px;font-weight:800;
+ font-size:12px;opacity:0;pointer-events:none;transition:.25s}
+.toast.show{opacity:1}
+.mobile-nav{display:none}
+@media(max-width:1050px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){
+ .sidebar{display:none}.main{margin:0;padding:17px 16px 35px}
+ .topbar{margin-bottom:18px}.mobile-brand{display:block}
+ .profile span{display:none}.search{max-width:none}
+ .hero{min-height:360px;padding:24px 21px;background-position:58% center}
+ .hero h1{font-size:43px}.hero p{font-size:13px}
+ .quick-grid{grid-template-columns:1fr 1fr;gap:9px}
+ .quick-card{min-height:100px;padding:13px;gap:10px}
+ .quick-icon{width:39px;height:39px;font-size:18px}
+ .quick-card strong{font-size:14px}.quick-card small{font-size:10px}
+ .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px 11px}
+ .section{margin-top:29px}.section-head h2{font-size:21px}
+ .page-title{font-size:31px}
+ .player{left:0;right:0;bottom:65px;min-height:76px;padding:9px 13px;
+  grid-template-columns:1fr auto;gap:8px}
+ .now img{width:43px;height:43px}.now strong{font-size:11px}
+ .controls{gap:12px}.controls button{font-size:16px}
+ .controls .main-play{width:35px;height:35px}
+ .progress-wrap{position:absolute;left:0;right:0;bottom:-1px;margin:0;gap:5px}
+ .progress-wrap span{display:none}#seek{width:100%;height:3px}
+ .player-right{display:none}
+ .mobile-nav{display:flex;position:fixed;z-index:35;bottom:0;left:0;right:0;
+  height:65px;padding-bottom:env(safe-area-inset-bottom);background:#0b100ef5;
+  border-top:1px solid var(--line);justify-content:space-around;align-items:center}
+ .mobile-nav button{border:0;background:none;color:#8d9b92;font-size:10px;display:grid;gap:4px;justify-items:center}
+ .mobile-nav button b{font-size:18px;font-weight:400}
+ .mobile-nav button.active{color:var(--green)}
+ .toast{bottom:155px}
+}
+@media(max-width:370px){.hero h1{font-size:36px}.quick-card{padding:10px}.quick-icon{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+ <div class="logo"><div class="logo-mark">A</div><div class="logo-name">ANAS<span>.</span></div></div>
+ <div class="nav-label">DISCOVER</div>
+ <nav class="nav">
+  <button class="active" data-page="home"><span class="nav-icon">⌂</span> Home</button>
+  <button data-page="music"><span class="nav-icon">♫</span> Music</button>
+  <button data-page="cinema"><span class="nav-icon">▣</span> Cinema</button>
+  <button data-page="favorites"><span class="nav-icon">♡</span> Favorites</button>
+  <button data-page="library"><span class="nav-icon">▤</span> My Library</button>
+ </nav>
+ <div class="side-bottom"><strong>Your world. Your sound.</strong><p>Music and cinema in one elegant place. Made to enjoy.</p></div>
+</aside>
+
+<main class="main">
+ <header class="topbar">
+  <div class="mobile-brand">ANAS<span style="color:var(--green)">.</span></div>
+  <label class="search"><span>⌕</span><input id="search" type="search" placeholder="Search music, movies..."></label>
+  <div class="profile"><div class="avatar">A</div><span>ANAS MEMBER</span></div>
+ </header>
+ <div id="content"></div>
+</main>
+
+<div class="player">
+ <div class="now">
+  <img id="nowCover" src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=200&q=80" alt="Cover">
+  <div style="min-width:0"><strong id="nowTitle">Choose something to play</strong><small id="nowArtist">ANAS PLAYER</small></div>
+ </div>
+ <div>
+  <div class="controls">
+   <button id="prev" aria-label="Previous">⏮</button>
+   <button class="main-play" id="play" aria-label="Play">▶</button>
+   <button id="next" aria-label="Next">⏭</button>
+  </div>
+  <div class="progress-wrap"><span id="currentTime">0:00</span><input id="seek" type="range" min="0" max="100" value="0"><span id="duration">0:00</span></div>
+ </div>
+ <div class="player-right"><span>♪</span><input id="volume" type="range" min="0" max="1" step=".01" value=".8"></div>
+</div>
+
+<nav class="mobile-nav">
+ <button class="active" data-page="home"><b>⌂</b>Home</button>
+ <button data-page="music"><b>♫</b>Music</button>
+ <button data-page="cinema"><b>▣</b>Cinema</button>
+ <button data-page="favorites"><b>♡</b>Saved</button>
+ <button data-page="library"><b>▤</b>Library</button>
+</nav>
+<div class="modal-backdrop" id="modalBackdrop"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+<audio id="audio" preload="metadata"></audio>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const content=$("#content"),audio=$("#audio");
+const covers={
+ night:"https://images.unsplash.com/photo-1519608487953-e999c86e7455?w=700&q=85",
+ headphones:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700&q=85",
+ studio:"https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=700&q=85",
+ concert:"https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=700&q=85",
+ city:"https://images.unsplash.com/photo-1519608487953-e999c86e7455?w=700&q=85",
+ film:"https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1000&q=85",
+ space:"https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=900&q=85",
+ sea:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900&q=85",
+ road:"https://images.unsplash.com/photo-1500534623283-312aade485b7?w=900&q=85"
+};
+const demoTracks=[
+ {id:"d1",title:"SoundHelix One",artist:"Demo audio",cover:covers.headphones,url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"},
+ {id:"d2",title:"SoundHelix Two",artist:"Demo audio",cover:covers.studio,url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"},
+ {id:"d3",title:"SoundHelix Three",artist:"Demo audio",cover:covers.concert,url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"},
+ {id:"d4",title:"SoundHelix Four",artist:"Demo audio",cover:covers.night,url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"}
+];
+const movies=[
+ {id:"m1",title:"Big Buck Bunny",genre:"Animation · Demo film",year:"2008",cover:"https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=900&q=85",desc:"A public sample animated film used here to demonstrate the ANAS cinema player.",url:"https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"},
+ {id:"m2",title:"Sintel",genre:"Fantasy · Demo film",year:"2010",cover:"https://images.unsplash.com/photo-1440404653325-ab127d49eac1?w=900&q=85",desc:"An open movie sample from the Blender Foundation. Online playback demonstration.",url:"https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"},
+ {id:"m3",title:"Tears of Steel",genre:"Sci-fi · Demo film",year:"2012",cover:covers.space,desc:"A science-fiction open movie sample. Watch online in the ANAS player.",url:"https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"},
+ {id:"m4",title:"Elephants Dream",genre:"Fantasy · Demo film",year:"2006",cover:covers.road,desc:"An open animated movie sample from the Blender Foundation.",url:"https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"}
+];
+let page="home",localTracks=[],current=null,currentList=[],currentIndex=-1;
+let favorites=JSON.parse(localStorage.getItem("anas_favs")||"[]");
+let playlists=JSON.parse(localStorage.getItem("anas_playlists")||"[]");
+let activePlaylist=null,searchTerm="",objectUrls=[];
+const saveFav=()=>localStorage.setItem("anas_favs",JSON.stringify(favorites));
+const saveLists=()=>localStorage.setItem("anas_playlists",JSON.stringify(playlists));
+const allTracks=()=>[...demoTracks,...localTracks];
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2300)}
+function time(v){if(!Number.isFinite(v))return"0:00";return Math.floor(v/60)+":"+String(Math.floor(v%60)).padStart(2,"0")}
+function setPage(p){page=p;activePlaylist=null;document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===p));render()}
+document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>setPage(b.dataset.page)));
+$("#search").addEventListener("input",e=>{searchTerm=e.target.value.trim().toLowerCase();render()});
+
+function trackCard(t){
+ return `<article class="card"><div class="cover"><img src="${esc(t.cover)}" alt="" loading="lazy"><div class="cover-actions">
+ <button class="round ${favorites.includes(t.id)?"liked":""}" data-fav="${esc(t.id)}" aria-label="Favorite">♥</button>
+ <button class="round" data-add="${esc(t.id)}" aria-label="Add to playlist">＋</button></div>
+ <button class="play-cover" data-play="${esc(t.id)}" aria-label="Play">▶</button></div>
+ <h3>${esc(t.title)}</h3><div class="sub">${esc(t.artist)}</div>${t.local?'<span class="tag">YOUR UPLOAD</span>':'<span class="tag">DEMO AUDIO</span>'}</article>`;
+}
+function movieCard(m){
+ return `<article class="card movie-card"><div class="cover"><img src="${esc(m.cover)}" alt="" loading="lazy">
+ <div class="cover-actions"><button class="round" data-movie="${m.id}">＋</button></div>
+ <button class="play-cover" data-movie="${m.id}">▶</button></div>
+ <h3>${esc(m.title)}</h3><div class="sub">${esc(m.genre)} · ${esc(m.year)}</div><span class="tag">DEMO · ONLINE</span></article>`;
+}
+function section(title,sub,html,more=""){return `<section class="section"><div class="section-head"><div><h2>${title}</h2><p>${sub}</p></div>${more}</div>${html}</section>`}
+function grid(items){return `<div class="cards">${items.join("")}</div>`}
+function render(){
+ const tracks=allTracks().filter(t=>(t.title+" "+t.artist).toLowerCase().includes(searchTerm));
+ const films=movies.filter(m=>(m.title+" "+m.genre).toLowerCase().includes(searchTerm));
+ if(page==="home"){
+  content.innerHTML=`<section class="hero"><div class="hero-content"><div class="eyebrow">THE ANAS EXPERIENCE</div>
+  <h1>Feel the sound.<br><span>See the story.</span></h1>
+  <p>Your personal space for music and cinema. Discover, play and build your own library in one place.</p>
+  <div class="hero-actions"><button class="primary" data-go="music">Explore music　→</button><button class="secondary" data-go="cinema">Discover cinema</button></div></div></section>
+  <div class="section"><div class="quick-grid">
+  <div class="quick-card" data-go="music"><div class="quick-icon">♫</div><div><strong>Music</strong><small>Listen to your collection</small></div></div>
+  <div class="quick-card" data-go="cinema"><div class="quick-icon">▣</div><div><strong>Cinema</strong><small>Watch demo films online</small></div></div>
+  <div class="quick-card" data-go="library"><div class="quick-icon">＋</div><div><strong>Your library</strong><small>Add your own audio</small></div></div>
+  </div></div>
+  ${section("Made for your mood","A few demo tracks to get started",grid(tracks.slice(0,4).map(trackCard)),'<button class="text-btn" data-go="music">VIEW ALL →</button>')}
+  ${section("Cinema spotlight","Open movie samples · online playback",grid(films.slice(0,4).map(movieCard)),'<button class="text-btn" data-go="cinema">VIEW ALL →</button>')}`;
+ }else if(page==="music"){
+  content.innerHTML=`<h1 class="page-title">Music</h1><p class="page-desc">Your sound, your collection. Demo tracks and your own uploads.</p>
+  ${section("All tracks","Choose a track and press play",tracks.length?grid(tracks.map(trackCard)):'<div class="empty"><strong>No tracks found</strong>Try another search.</div>')}`;
+ }else if(page==="cinema"){
+  content.innerHTML=`<h1 class="page-title">Cinema</h1><p class="page-desc">A small collection of open movie samples for online viewing.</p>
+  ${section("Explore films","Demo movies · Internet connection required",films.length?grid(films.map(movieCard)):'<div class="empty"><strong>No films found</strong>Try another search.</div>')}`;
+ }else if(page==="favorites"){
+  const favs=tracks.filter(t=>favorites.includes(t.id));
+  content.innerHTML=`<h1 class="page-title">Favorites</h1><p class="page-desc">The tracks you saved.</p>${favs.length?grid(favs.map(trackCard)):'<div class="empty"><strong>Your favorites are waiting</strong>Tap the heart on a track to save it here.</div>'}`;
+ }else if(page==="library"){
+  content.innerHTML=`<h1 class="page-title">My Library</h1><p class="page-desc">Upload your own audio files and create playlists.</p>
+  <div class="library-tools"><label class="upload-label">＋ Upload music<input id="upload" type="file" accept="audio/*" multiple></label><button class="secondary" id="newPlaylist">＋ New playlist</button></div>
+  ${section("Your playlists","Playlists are saved on this device",playlists.length?`<div class="cards">${playlists.map((p,i)=>`<article class="card"><div class="cover" style="display:grid;place-items:center;background:linear-gradient(140deg,#263e2d,#111a15);font-size:48px">♫</div><h3>${esc(p.name)}</h3><div class="sub">${p.tracks.length} tracks</div><button class="text-btn" data-openlist="${i}">OPEN PLAYLIST →</button></article>`).join("")}</div>`:'<div class="empty"><strong>No playlists yet</strong>Create a playlist and add your favorite tracks.</div>')}
+  ${section("Your uploads","Audio files saved in this browser",localTracks.length?grid(localTracks.map(t=>trackCard(t))):'<div class="empty"><strong>No uploaded music</strong>Upload audio files from your iPhone or computer.</div>')}`;
+  const upload=$("#upload");if(upload)upload.addEventListener("change",e=>uploadFiles(e.target.files));
+  $("#newPlaylist").addEventListener("click",newPlaylist);
+ }
+ if(activePlaylist!==null){renderPlaylist()}
+}
+function renderPlaylist(){
+ const p=playlists[activePlaylist];if(!p){activePlaylist=null;render();return}
+ const tracks=p.tracks.map(id=>allTracks().find(t=>t.id===id)).filter(Boolean);
+ content.innerHTML=`<button class="text-btn" id="backLibrary">← BACK TO LIBRARY</button><h1 class="page-title">${esc(p.name)}</h1><p class="page-desc">${tracks.length} tracks in this playlist</p>
+ ${tracks.length?`<div class="cards">${tracks.map(t=>`${trackCard(t).replace("</article>",`<button class="text-btn" data-remove="${esc(t.id)}">REMOVE FROM PLAYLIST</button></article>`)}`).join("")}</div>`:'<div class="empty"><strong>This playlist is empty</strong>Add music using the ＋ button on a track.</div>'}
+ <button class="secondary" id="deletePlaylist" style="margin-top:20px">Delete playlist</button>`;
+ $("#backLibrary").onclick=()=>{activePlaylist=null;render()};
+ $("#deletePlaylist").onclick=()=>{playlists.splice(activePlaylist,1);saveLists();activePlaylist=null;render();toast("Playlist deleted")};
+}
+async function playTrack(id,list){
+ const source=list||allTracks();const index=source.findIndex(t=>t.id===id);if(index<0)return;
+ currentList=source;currentIndex=index;current=source[index];
+ audio.src=current.url;audio.load();
+ $("#nowTitle").textContent=current.title;$("#nowArtist").textContent=current.artist;
+ $("#nowCover").src=current.cover;$("#play").textContent="Ⅱ";
+ try{await audio.play()}catch(e){$("#play").textContent="▶";toast("Playback unavailable. Check your connection or file.") }
+}
+function togglePlay(){if(!current){const t=allTracks()[0];if(t)playTrack(t.id);return}
+ if(audio.paused){audio.play().then(()=>$("#play").textContent="Ⅱ").catch(()=>toast("Cannot play this audio"))}
+ else{audio.pause();$("#play").textContent="▶"}}
+$("#play").onclick=togglePlay;
+$("#prev").onclick=()=>{if(currentList.length)playTrack(currentList[(currentIndex-1+currentList.length)%currentList.length].id,currentList)};
+$("#next").onclick=()=>{if(currentList.length)playTrack(currentList[(currentIndex+1)%currentList.length].id,currentList)};
+audio.addEventListener("play",()=>$("#play").textContent="Ⅱ");
+audio.addEventListener("pause",()=>$("#play").textContent="▶");
+audio.addEventListener("timeupdate",()=>{if(audio.duration){$("#seek").value=audio.currentTime/audio.duration*100;$("#currentTime").textContent=time(audio.currentTime);$("#duration").textContent=time(audio.duration)}});
+audio.addEventListener("ended",()=>{if(currentList.length)$("#next").click()});
+$("#seek").addEventListener("input",e=>{if(audio.duration)audio.currentTime=audio.duration*e.target.value/100});
+$("#volume").addEventListener("input",e=>audio.volume=Number(e.target.value));
+
+function openModal(html){$("#modal").innerHTML=html;$("#modalBackdrop").classList.add("show")}
+function closeModal(){$("#modalBackdrop").classList.remove("show")}
+$("#modalBackdrop").addEventListener("click",e=>{if(e.target.id==="modalBackdrop")closeModal()});
+function newPlaylist(){
+ openModal(`<h2>Create playlist</h2><p>Give your playlist a name.</p><input id="playlistName" maxlength="35" placeholder="My favorite songs"><div class="modal-actions"><button class="secondary" id="cancelModal">Cancel</button><button class="primary" id="createPlaylist">Create</button></div>`);
+ $("#cancelModal").onclick=closeModal;
+ $("#createPlaylist").onclick=()=>{const name=$("#playlistName").value.trim();if(!name){toast("Enter a playlist name");return}
+ playlists.push({name,tracks:[]});saveLists();closeModal();render();toast("Playlist created")};
+}
+function addTrackToPlaylist(id){
+ if(!playlists.length){toast("Create a playlist first");return}
+ openModal(`<h2>Add to playlist</h2><p>Choose where to add this track.</p>${playlists.map((p,i)=>`<button class="secondary" style="width:100%;margin:5px 0;text-align:left" data-choose="${i}">${esc(p.name)}</button>`).join("")}<div class="modal-actions"><button class="secondary" id="cancelModal">Close</button></div>`);
+ $("#cancelModal").onclick=closeModal;
+ document.querySelectorAll("[data-choose]").forEach(b=>b.onclick=()=>{const p=playlists[Number(b.dataset.choose)];if(!p.tracks.includes(id))p.tracks.push(id);saveLists();closeModal();toast("Added to playlist")});
+}
+function showMovie(id){
+ const m=movies.find(x=>x.id===id);if(!m)return;
+ openModal(`<div class="eyebrow">ANAS CINEMA · DEMO</div><h2>${esc(m.title)}</h2><p>${esc(m.desc)}<br>${esc(m.genre)} · ${esc(m.year)}</p><div class="video-box"><video controls playsinline preload="metadata" poster="${esc(m.cover)}"><source src="${esc(m.url)}" type="video/mp4">Your browser does not support this video.</video></div><div class="modal-actions"><button class="secondary" id="closeMovie">Close</button></div>`);
+ $("#closeMovie").onclick=closeModal;
+}
+function handleClick(e){
+ const b=e.target.closest("button,[data-go],.quick-card");if(!b)return;
+ if(b.dataset.go){setPage(b.dataset.go);return}
+ if(b.dataset.play){playTrack(b.dataset.play);return}
+ if(b.dataset.fav){const id=b.dataset.fav;favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];saveFav();render();toast(favorites.includes(id)?"Added to favorites":"Removed from favorites");return}
+ if(b.dataset.add){addTrackToPlaylist(b.dataset.add);return}
+ if(b.dataset.movie){showMovie(b.dataset.movie);return}
+ if(b.dataset.openlist!==undefined){activePlaylist=Number(b.dataset.openlist);renderPlaylist();return}
+ if(b.dataset.remove){const p=playlists[activePlaylist];p.tracks=p.tracks.filter(x=>x!==b.dataset.remove);saveLists();renderPlaylist();return}
+}
+content.addEventListener("click",handleClick);
+
+function dbOpen(){
+ return new Promise((resolve,reject)=>{
+  if(!("indexedDB" in window)){reject(new Error("IndexedDB unavailable"));return}
+  const req=indexedDB.open("ANAS_AUDIO_DB",1);
+  req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains("tracks"))db.createObjectStore("tracks",{keyPath:"id"})};
+  req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
+ });
+}
+async function loadLocalTracks(){
+ try{
+  objectUrls.forEach(URL.revokeObjectURL);objectUrls=[];
+  const db=await dbOpen();
+  const rows=await new Promise((resolve,reject)=>{const r=db.transaction("tracks").objectStore("tracks").getAll();r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});
+  localTracks=rows.map(x=>{const url=URL.createObjectURL(x.blob);objectUrls.push(url);return{id:x.id,title:x.name,artist:"Your upload",cover:covers.studio,url,local:true}});
+  db.close();if(page==="library"||page==="music"||page==="home")render();
+ }catch(e){toast("Could not load saved uploads")}
+}
+async function uploadFiles(files){
+ const selected=[...files].filter(f=>f.type.startsWith("audio/"));if(!selected.length){toast("Choose audio files");return}
+ try{
+  const db=await dbOpen();const tx=db.transaction("tracks","readwrite");const store=tx.objectStore("tracks");
+  selected.forEach(f=>store.put({id:crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random(),name:f.name.replace(/\.[^.]+$/,""),blob:f}));
+  await new Promise((resolve,reject)=>{tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error)});
+  db.close();await loadLocalTracks();toast(selected.length+" audio file(s) added");
+ }catch(e){toast("Upload storage failed on this browser")}
+}
+content.addEventListener("click",async e=>{
+ const b=e.target.closest("[data-delete-local]");if(!b)return;
+});
+loadLocalTracks();
+render();
+</script>
+</body>
+</html>
